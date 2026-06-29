@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tracking Plan Review"
+  short_description: "Design, review, and output BTCC/Sensors tracking plans"
+  default_prompt: "Use $tracking-plan-review to design, review, or output this 埋点方案 as a 神策提需模板."
