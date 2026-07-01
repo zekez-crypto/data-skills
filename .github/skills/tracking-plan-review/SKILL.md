@@ -10,7 +10,8 @@ description: Design, review, and output BTCC/Sensors event tracking plans based 
 Use this skill to design, audit, and output BTCC 埋点方案 according to:
 
 - Field-level rules from `BTCC_埋点方案文档填写说明（字段级说明）.xlsx`, extracted in `references/field-rules.md`.
-- The deliverable workbook template `assets/sensors-custom-event-request-template.xlsx`, documented in `references/output-template.md`.
+- The generic deliverable workbook template `assets/sensors-custom-event-request-template.xlsx`, documented in `references/output-template.md`.
+- The business-scenario deliverable workbook template `assets/business-scenario-sensors-tracking-template.xlsx`, documented in `references/output-template.md`.
 
 ## Workflow
 
@@ -32,16 +33,17 @@ When creating a tracking plan:
 - Choose upload method by accuracy needs: server-side for key result events, front-end for PV/exposure/click/UI interaction events.
 - Mark platform scope clearly for Android, iOS, Web/JavaScript, mini program, or server-side.
 - Include screenshots or screenshot requirements when UI location, button position, category hierarchy, or version context may be ambiguous.
-- If the user wants an Excel deliverable, use the workbook template columns and sheet rules from `references/output-template.md`.
+- If the user wants an Excel deliverable, choose the matching workbook template and use the columns and sheet rules from `references/output-template.md`.
 
 ## Excel Output Mode
 
 When producing a final 神策埋点提需模板:
 
-- Copy `assets/sensors-custom-event-request-template.xlsx` and preserve its sheets, styling, merged cells, validations, and guidance text.
+- Copy `assets/sensors-custom-event-request-template.xlsx` for a generic/simple plan, or `assets/business-scenario-sensors-tracking-template.xlsx` when the request benefits from a richer scenario template with event rows, reusable property dictionary, traffic-slot/location dictionary, APP page dictionary, or logged-in user profile examples. Use judgment based on the business scenario and downstream analysis needs, not only on the module name.
+- Preserve the selected template's sheets, styling, merged cells, validations, and guidance text.
 - Populate the main `（埋点事件+事件级变量）` sheet with one row per event-property binding.
 - Add all used event properties to `事件级属性列表`; avoid duplicating equivalent reusable properties.
-- Put logged-in user ID and user profile attributes in `登录用户ID&登录用户变量（可不填）`, not in the event-property sheet.
+- Put logged-in user ID and user profile attributes in the login-user sheet, not in the event-property sheet. Some templates name it `登录用户ID&登录用户变量（可不填）`; the business-scenario template names it `登录用户ID&登录用户变量`.
 - Update `change_long` with the plan version and summary of added/changed/deprecated events or properties.
 - Before delivery, verify required fields are filled, dropdown values are valid, and the main sheet has no event property missing from `事件级属性列表`.
 

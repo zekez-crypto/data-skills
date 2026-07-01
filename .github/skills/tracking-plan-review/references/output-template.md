@@ -2,7 +2,12 @@
 
 Use this reference when the user asks for a deliverable 埋点方案, 提需模板, Excel output, 神策导入表, or anything that should be written into the bundled workbook template.
 
-Source asset: `assets/sensors-custom-event-request-template.xlsx`
+Source assets:
+
+- Generic template: `assets/sensors-custom-event-request-template.xlsx`
+- Business-scenario template: `assets/business-scenario-sensors-tracking-template.xlsx`
+
+Use the generic template for simple or clean-slate deliverables. Use the business-scenario template when the request benefits from a richer workbook with example event rows, reusable property dictionary, traffic-slot/location dictionary, APP page dictionary, or logged-in user profile examples. Decide by the structure needed for implementation and analysis, not only by the module name.
 
 ## Workbook Structure
 
@@ -15,6 +20,26 @@ Keep these sheets and their purposes:
 | `用户运营_弹窗TOAST曝光（埋点事件+事件级变量）` | Main event and event-property binding sheet. Rename the sheet to match the feature or business module when producing a new plan, but keep the suffix `（埋点事件+事件级变量）`. |
 | `事件级属性列表` | Dictionary of reusable event properties. Every new event property used in the main sheet must appear here. |
 | `登录用户ID&登录用户变量（可不填）` | Logged-in user ID and user properties. Fill only when the plan needs user profile properties or ID setup. |
+
+## Business-Scenario Template Structure
+
+Asset: `assets/business-scenario-sensors-tracking-template.xlsx`
+
+Source example: `交易运营-神策埋点需求 (1).xlsx`. Although the included sheet names come from a trading-operations plan, this template can be reused for other scenarios with similar tracking-plan needs. Rename scenario-specific sheets when appropriate while preserving the workbook structure and guidance.
+
+Keep these sheets and their purposes:
+
+| Sheet | Purpose |
+|---|---|
+| `change_long` | Version change log. Row 1 is guidance; append version rows with version, change summary, and date. |
+| `BTCC埋点介绍` | Usage notes. Usually keep unchanged. |
+| `交易运营（埋点事件+事件级变量）` | Main event and event-property binding sheet from the source example. For other modules, rename to the business module while keeping the suffix `（埋点事件+事件级变量）`. |
+| `流量位说明-首页` | Traffic-slot or location dictionary. Use for dimensions such as `area_var`, `position_var`, `trafficName_var`, `trafficID_var`, screenshots, and placement remarks; rename if the scenario is not homepage traffic. |
+| `APP页面说明` | APP/page dictionary. Use for `pageType_var`, `pageName_var`, and page screenshot references; can also serve as a page/module mapping sheet for non-APP scenarios. |
+| `登录用户ID&登录用户变量` | Logged-in user ID and user properties. Fill only when the plan needs user profile properties or ID setup. |
+| `事件级属性列表` | Dictionary of reusable event properties. Every event property used in the main sheet must appear here. |
+
+In the business-scenario template, the main sheet starts data rows at row 3 and uses the same main event columns A-M as the generic template. It may contain example rows; update, append, or clear rows according to the user's requested output while preserving styling, merged cells, validations, and guidance text.
 
 ## Main Event Sheet Columns
 
@@ -55,7 +80,7 @@ Rules:
 
 ## Logged-In User ID And User Properties
 
-Sheet: `登录用户ID&登录用户变量（可不填）`
+Sheet: `登录用户ID&登录用户变量（可不填）` in the generic template, or `登录用户ID&登录用户变量` in the business-scenario template.
 
 Use this sheet when the request includes user attributes, profile properties, ID mapping, segmentation tags, VIP/KYC/channel/invite/KOL attributes, or other values that should be set on the user profile rather than attached to a single event.
 
@@ -84,14 +109,15 @@ Sheet: `change_long`
 
 When asked to produce a final Excel deliverable:
 
-1. Copy `assets/sensors-custom-event-request-template.xlsx` to the requested output location.
-2. Rename the main event sheet to the business module if helpful, keeping `（埋点事件+事件级变量）`.
-3. Clear sample rows from the main event sheet after preserving headers, validations, merges, widths, and styling.
+1. Copy the selected source template to the requested output location: use `assets/sensors-custom-event-request-template.xlsx` for a generic/simple plan, or `assets/business-scenario-sensors-tracking-template.xlsx` for a richer scenario plan.
+2. Rename the main event sheet to the business module if helpful, keeping `（埋点事件+事件级变量）`. In the business-scenario template, rename `交易运营（埋点事件+事件级变量）` when the output is for another module.
+3. Clear or update sample rows from the main event sheet after preserving headers, validations, merges, widths, and styling. For scenario-template outputs, keep useful existing example rows only when they are part of the requested plan.
 4. Populate rows from the designed tracking plan.
 5. Add every used event property to `事件级属性列表`, including reused and newly defined properties.
-6. Fill `登录用户ID&登录用户变量（可不填）` only when user properties are needed; otherwise keep the sheet and its guidance intact.
-7. Extend data validations when populated rows exceed the template's sample validation ranges, especially `数据格式`, `应埋点平台`, and user-property `字段类型`.
-8. Update `change_long`.
-9. Visually or structurally verify that headers remain, required fields are populated, dropdown values are valid, and the main sheet does not reference missing properties.
+6. Fill the login-user sheet only when user properties are needed; otherwise keep the sheet and its guidance intact.
+7. For business-scenario outputs, update or rename `流量位说明-首页` when traffic-slot, banner, module-position, or placement properties are used, and update or rename `APP页面说明` when page type/name values or page screenshots are introduced or changed.
+8. Extend data validations when populated rows exceed the template's sample validation ranges, especially `数据格式`, `应埋点平台`, and user-property `字段类型`.
+9. Update `change_long`.
+10. Visually or structurally verify that headers remain, required fields are populated, dropdown values are valid, and the main sheet does not reference missing properties.
 
 If the user asks only for a Markdown plan or review, do not create an Excel file unless explicitly requested. Still follow these columns when presenting a table meant to be pasted into the template.
