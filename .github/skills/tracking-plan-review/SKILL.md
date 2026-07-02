@@ -40,12 +40,14 @@ When creating a tracking plan:
 When producing a final 神策埋点提需模板:
 
 - Copy `assets/sensors-custom-event-request-template.xlsx` for a generic/simple plan, or `assets/business-scenario-sensors-tracking-template.xlsx` when the request benefits from a richer scenario template with event rows, reusable property dictionary, traffic-slot/location dictionary, APP page dictionary, or logged-in user profile examples. Use judgment based on the business scenario and downstream analysis needs, not only on the module name.
-- Preserve the selected template's sheets, styling, merged cells, validations, and guidance text.
+- Preserve the selected template's sheets, useful styling, validations, guidance text, and intentional header merges; do not preserve nonessential merged cells in populated data or dictionary areas.
 - Populate the main `（埋点事件+事件级变量）` sheet with one row per event-property binding.
 - Add all used event properties to `事件级属性列表`; avoid duplicating equivalent reusable properties.
 - Put logged-in user ID and user profile attributes in the login-user sheet, not in the event-property sheet. Some templates name it `登录用户ID&登录用户变量（可不填）`; the business-scenario template names it `登录用户ID&登录用户变量`.
+- Do not add or populate extra dictionary/page-description sheets by default, such as scenario-specific `字典说明`, `APP&Web页面说明`, traffic-slot, location, or page mapping sheets, unless the user explicitly asks for them or the implementation truly requires a separate reusable dictionary. Prefer putting concise enum/value guidance in the main sheet's property examples and remarks.
 - Update `change_long` with the plan version and summary of added/changed/deprecated events or properties.
-- Before delivery, verify required fields are filled, dropdown values are valid, and the main sheet has no event property missing from `事件级属性列表`.
+- Clean template residue before delivery: remove inherited template screenshots/images/drawings unless the user explicitly asks to keep them; remove nonessential merged cells in populated data/dictionary areas so rows remain filterable; clear or overwrite sample data/styles that make the new content unreadable or ambiguous.
+- Before delivery, verify required fields are filled, dropdown values are valid, the main sheet has no event property missing from `事件级属性列表`, and the workbook has no unintended `xl/media` or `xl/drawings` residue.
 
 ## Review Mode
 
@@ -57,6 +59,7 @@ When reviewing a teammate's plan, return:
 - Governance suggestions: event merging, property reuse, value enumeration, naming consistency, screenshots, version tracking, and owner traceability.
 - Revised examples: provide corrected identifiers, names, descriptions, property types, value examples, or trigger wording where helpful.
 - If the reviewed artifact is in the 神策提需模板, also check sheet integrity: main-sheet fields, property dictionary coverage, user-property placement, change log, screenshot placeholders, and platform/dropdown values.
+- Also check for template residue in reviewed Excel files: inherited screenshots/images/drawings, sample rows, unreadable sample styling, and unnecessary merged cells in data or dictionary sheets.
 
 ## Severity
 

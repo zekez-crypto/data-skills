@@ -39,7 +39,15 @@ Keep these sheets and their purposes:
 | `登录用户ID&登录用户变量` | Logged-in user ID and user properties. Fill only when the plan needs user profile properties or ID setup. |
 | `事件级属性列表` | Dictionary of reusable event properties. Every event property used in the main sheet must appear here. |
 
-In the business-scenario template, the main sheet starts data rows at row 3 and uses the same main event columns A-M as the generic template. It may contain example rows; update, append, or clear rows according to the user's requested output while preserving styling, merged cells, validations, and guidance text.
+In the business-scenario template, the main sheet starts data rows at row 3 and uses the same main event columns A-M as the generic template. It may contain example rows; update, append, or clear rows according to the user's requested output while preserving useful headers, validations, widths, and guidance text.
+
+Template residue cleanup is mandatory for every final Excel deliverable:
+
+- Remove inherited screenshots, image objects, charts, shapes, or other drawings from the template unless the user explicitly asks to keep them.
+- Do not keep template example screenshots as placeholders. Use text placeholders such as `待补充：APP截图/位置标注` and `待补充：Web截图/位置标注` unless real feature screenshots are intentionally inserted.
+- Clear template sample rows that are not part of the requested plan.
+- Unmerge populated data rows and dictionary rows so each row can be filtered, sorted, copied, and maintained independently. Keep only intentional header merges such as the main instruction row or screenshot header spanning APP/Web columns.
+- Check that old template formatting does not make new content unreadable, hidden, clipped, or visually misleading. If needed, clear data-area formats and reapply simple readable formatting.
 
 ## Main Event Sheet Columns
 
@@ -115,9 +123,11 @@ When asked to produce a final Excel deliverable:
 4. Populate rows from the designed tracking plan.
 5. Add every used event property to `事件级属性列表`, including reused and newly defined properties.
 6. Fill the login-user sheet only when user properties are needed; otherwise keep the sheet and its guidance intact.
-7. For business-scenario outputs, update or rename `流量位说明-首页` when traffic-slot, banner, module-position, or placement properties are used, and update or rename `APP页面说明` when page type/name values or page screenshots are introduced or changed.
-8. Extend data validations when populated rows exceed the template's sample validation ranges, especially `数据格式`, `应埋点平台`, and user-property `字段类型`.
-9. Update `change_long`.
-10. Visually or structurally verify that headers remain, required fields are populated, dropdown values are valid, and the main sheet does not reference missing properties.
+7. Do not add, rename, or populate extra dictionary/page-description sheets by default, including scenario-specific `字典说明`, `流量位说明-首页`, `APP页面说明`, or `APP&Web页面说明`. Keep concise enum and page/source guidance in the main event sheet's `属性值示例枚举或说明` and `备注信息` columns. Only populate these extra sheets when the user explicitly asks for a dictionary/page mapping sheet, or when the plan has enough reusable page/location/traffic-slot values that a separate dictionary is necessary for implementation.
+8. Remove inherited template images/drawings across all sheets unless explicitly requested; verify the exported workbook has no unintended `xl/media` or `xl/drawings` entries.
+9. Unmerge populated data/dictionary ranges. Verify dictionary sheets such as page, location, traffic-slot, property dictionary, and user-property sheets do not contain nonessential merged cells.
+10. Extend data validations when populated rows exceed the template's sample validation ranges, especially `数据格式`, `应埋点平台`, and user-property `字段类型`.
+11. Update `change_long`.
+12. Visually or structurally verify that headers remain, required fields are populated, dropdown values are valid, the main sheet does not reference missing properties, template example screenshots are not retained, and populated rows remain readable and filterable.
 
 If the user asks only for a Markdown plan or review, do not create an Excel file unless explicitly requested. Still follow these columns when presenting a table meant to be pasted into the template.
