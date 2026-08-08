@@ -36,6 +36,34 @@ Source workbook: `references/source-field-instructions.xlsx`, copied from `/User
 - 数字类属性需判断是统计对象还是分析维度。用于统计总和的支付金额等应设为整数或小数/Number；用于维度筛选的坑位、连续签到天数等应设为字符串/String。
 - 页面名称相关属性应另起 sheet 穷举页面名称命名规则，否则开发容易乱传页面名称值；若页面和名称有映射关系，建议直接上传页面 URL。
 
+## 公共全局自定义事件属性
+
+所有由前端或客户端上报的自定义事件，必须由 SDK 或公共上报层统一附加下列适用于该终端的全局自定义事件属性。业务埋点主表无需为每个事件重复展开 8 个属性，但每个前端事件必须增加一条 `全局自定义属性` 汇总占位行；Excel 提需文档还必须保留固定 Sheet `公共_全局自定义事件属性（所有自定义事件都要加该属性）`。
+
+| 属性英文名称 | 属性中文名称 | 数据格式 | 属性值说明 | 备注 | 适用终端 | 启用版本 |
+|---|---|---|---|---|---|---|
+| `TopPageName` | 顶层页面名称 | String | 尽可能唯一 | APP 强需要，父级顶层页面 | APP、web、H5 |  |
+| `referedURL` | 前向页面地址 | String | UTM 获取 |  | web、H5 |  |
+| `routeAddress` | 路由地址 | String | 直接取 `flutter navigator` |  | web、H5 |  |
+| `fwdPageName` | 后向页面名称 | String | 可以为空 |  | web、H5 |  |
+| `fwdLink` | 跳转链接 | String | 可以为空 |  | web、H5 |  |
+| `businessUnit` | 业务线 | String | `Spot-现货`、`Trade-合约`、`TradFi-tradFi`、`Copytrading-跟单`、`Fiat-法币`、`Convert-闪兑`、`Earn-理财`、`Wallet-充提`、`Login&Signup-登录注册`、`Campaign-活动`、`Asset-资产`、`Setting-个人中心`、`Others-排除以上业务，归为其他类，如帮助中心、VIP等` | 上传对应稳定英文码：`Spot`、`Trade`、`TradFi`、`Copytrading`、`Fiat`、`Convert`、`Earn`、`Wallet`、`Login&Signup`、`Campaign`、`Asset`、`Setting`、`Others` | APP、web、H5 |  |
+| `deviceID` | 设备ID | String |  |  | APP |  |
+| `userEnd` | 响应端 | String | `Ios`、`Android`、`Web`、`H5` |  | APP、web、H5 | `8984` |
+
+执行规则：
+
+- 固定 Sheet `公共_全局自定义事件属性（所有自定义事件都要加该属性）` 是 `默认不新增额外字典 Sheet` 规则的唯一强制例外。增加该固定 Sheet 后，其他场景字典、页面说明、流量位、位置映射等 Sheet 仍然默认不新增。
+- 在 `（埋点事件+事件级变量）` 主 Sheet 中，每个上传方式为 `前端` 的事件必须有且仅有一条 `全局自定义属性` 占位行。
+- 占位行格式：`属性英文名称`留空，`属性中文名称`填写 `全局自定义属性`，`数据格式`与`属性值示例枚举或说明`留空；事件英文名、事件中文名、上传方式、触发时机、应埋点平台等事件字段正常填写。
+- `全局自定义属性` 只是主表中的汇总提示，不是实际属性标识符，不添加到 `事件级属性列表`。
+- 一个前端事件还有业务事件属性时，将 `全局自定义属性` 放在该事件的第一条属性行，业务属性逐行排在后面。
+- 保留既有英文标识符和大小写，包括 `referedURL`、`TopPageName`、`deviceID`、`userEnd`，不要按普通事件属性的 `_var` 规则重命名。
+- 仅对属性标注的适用终端强制上报；不适用的终端不要求传空值。
+- `businessUnit` 必须上传备注列中的稳定英文码，不上传中文展示文案。
+- `userEnd` 必须按实际响应端上传固定枚举；截图中的启用版本为 `8984`。
+- 审核时若前端/客户端自定义事件缺少 `全局自定义属性` 占位行、未携带适用的全局属性，或 Excel 缺少/改动固定 Sheet，判定为 Critical。
+
 ## 登录用户 ID 和登录用户变量
 
 | 字段 | 必备 | 规则 |
@@ -57,6 +85,7 @@ Source workbook: `references/source-field-instructions.xlsx`, copied from `/User
 Critical:
 
 - 必备字段缺失。
+- 前端/客户端自定义事件缺少 `全局自定义属性` 占位行、未携带适用的公共全局自定义事件属性，或 Excel 缺少/改动固定公共属性 Sheet。
 - 标识符重复、命名不合法、格式混用、含义和名称/描述不一致。
 - 触发条件不明确，或过程事件和结果事件混淆。
 - 关键结果事件使用前端上传，导致准确性风险。

@@ -19,6 +19,7 @@ Keep these sheets and their purposes:
 | `BTCC埋点介绍` | Usage notes. Usually keep unchanged unless the user asks to revise instructions. |
 | `用户运营_弹窗TOAST曝光（埋点事件+事件级变量）` | Main event and event-property binding sheet. Rename the sheet to match the feature or business module when producing a new plan, but keep the suffix `（埋点事件+事件级变量）`. |
 | `事件级属性列表` | Dictionary of reusable event properties. Every new event property used in the main sheet must appear here. |
+| `公共_全局自定义事件属性（所有自定义事件都要加该属性）` | Fixed global custom event properties. Keep the sheet name and standard content unchanged in every Excel deliverable. |
 | `登录用户ID&登录用户变量（可不填）` | Logged-in user ID and user properties. Fill only when the plan needs user profile properties or ID setup. |
 
 ## Business-Scenario Template Structure
@@ -38,6 +39,7 @@ Keep these sheets and their purposes:
 | `APP页面说明` | APP/page dictionary. Use for `pageType_var`, `pageName_var`, and page screenshot references; can also serve as a page/module mapping sheet for non-APP scenarios. |
 | `登录用户ID&登录用户变量` | Logged-in user ID and user properties. Fill only when the plan needs user profile properties or ID setup. |
 | `事件级属性列表` | Dictionary of reusable event properties. Every event property used in the main sheet must appear here. |
+| `公共_全局自定义事件属性（所有自定义事件都要加该属性）` | Fixed global custom event properties. Keep the sheet name and standard content unchanged in every Excel deliverable. |
 
 In the business-scenario template, the main sheet starts data rows at row 3 and uses the same main event columns A-M as the generic template. It may contain example rows; update, append, or clear rows according to the user's requested output while preserving useful headers, validations, widths, and guidance text.
 
@@ -60,8 +62,8 @@ The main sheet starts data rows at row 3. Preserve row 1 instructions and row 2 
 | C | `web端对应截图（埋点涉及到哪个端就截哪个图）` | Screenshot or placeholder. If not available, write `待补充：Web截图/位置标注`. |
 | D | `事件英文名称` | Event identifier. Follow `field-rules.md` identifier rules. Template examples use snake/lower camel with action suffixes such as `_view`, `_click`, `_submit`, `_success`, `_fail`; keep one convention per workbook. |
 | E | `事件中文名称` | Chinese event name, max 30 chars, aligned with the identifier and actual UI action. |
-| F | `属性英文名称` | Event property identifier. Must already exist in `事件级属性列表`; if the event has no property, fill `#`. |
-| G | `属性中文名称` | Chinese property name. If no property, fill `#`. |
+| F | `属性英文名称` | Event property identifier. Must already exist in `事件级属性列表`. For the required front-end global-property marker row, leave blank. If the event has no business property and is not a front-end event, fill `#`. |
+| G | `属性中文名称` | Chinese property name. For the required front-end global-property marker row, fill `全局自定义属性`. If no property, fill `#`. |
 | H | `数据格式` | One of `Bool`, `String`, `Datetime`, `List`, `Number`. Use `String` for dimension-like codes, page names, positions, and enums unless numeric aggregation is required. |
 | I | `属性值示例枚举或说明` | Enumerate known values or provide clear examples. For non-exhaustive values, include examples plus `等`. For positions, state whether numbering starts from 1. |
 | J | `上传方式（前端、后端）` | Use `前端` for PV, exposure, click, UI interaction; use `后端` for critical result events requiring accuracy, such as registration success, payment success, order completion, deposit/withdraw result. |
@@ -85,6 +87,28 @@ Rules:
 - Before adding a new property, check whether a semantically equivalent property already exists.
 - The main event sheet must not reference properties missing from this dictionary.
 - Keep existing reusable properties unless the user explicitly asks to clean the dictionary. For a cleaner deliverable, it is acceptable to keep only properties used by the current plan plus newly defined properties.
+
+## Fixed Global Custom Event Properties
+
+Sheet: `公共_全局自定义事件属性（所有自定义事件都要加该属性）`
+
+This sheet is mandatory and its content is normally fixed. Every custom event reported by APP, Web, or H5 must carry the properties applicable to that terminal through the SDK/common reporting layer. Do not duplicate these eight properties as separate rows for every event in the main event sheet. Instead, add one summary marker row per front-end event with blank `属性英文名称` and `全局自定义属性` in `属性中文名称`. Do not move the marker or the eight fixed properties into `事件级属性列表`.
+
+This mandatory fixed sheet is the only exception to the workbook rule `默认不新增额外字典 Sheet`. Its presence must not be used as a reason to add other scenario, page, traffic-slot, location, or mapping sheets by default.
+
+Required columns:
+
+| Column | Header |
+|---|---|
+| A | `属性英文名称` |
+| B | `属性中文名称` |
+| C | `数据格式` |
+| D | `属性值说明` |
+| E | `备注` |
+| F | `适用终端` |
+| G | `启用版本` |
+
+Required fixed rows: `TopPageName`, `referedURL`, `routeAddress`, `fwdPageName`, `fwdLink`, `businessUnit`, `deviceID`, `userEnd`. Use the exact definitions and enums in `references/field-rules.md`.
 
 ## Logged-In User ID And User Properties
 
@@ -121,13 +145,15 @@ When asked to produce a final Excel deliverable:
 2. Rename the main event sheet to the business module if helpful, keeping `（埋点事件+事件级变量）`. In the business-scenario template, rename `交易运营（埋点事件+事件级变量）` when the output is for another module.
 3. Clear or update sample rows from the main event sheet after preserving headers, validations, merges, widths, and styling. For scenario-template outputs, keep useful existing example rows only when they are part of the requested plan.
 4. Populate rows from the designed tracking plan.
-5. Add every used event property to `事件级属性列表`, including reused and newly defined properties.
-6. Fill the login-user sheet only when user properties are needed; otherwise keep the sheet and its guidance intact.
-7. Do not add, rename, or populate extra dictionary/page-description sheets by default, including scenario-specific `字典说明`, `流量位说明-首页`, `APP页面说明`, or `APP&Web页面说明`. Keep concise enum and page/source guidance in the main event sheet's `属性值示例枚举或说明` and `备注信息` columns. Only populate these extra sheets when the user explicitly asks for a dictionary/page mapping sheet, or when the plan has enough reusable page/location/traffic-slot values that a separate dictionary is necessary for implementation.
-8. Remove inherited template images/drawings across all sheets unless explicitly requested; verify the exported workbook has no unintended `xl/media` or `xl/drawings` entries.
-9. Unmerge populated data/dictionary ranges. Verify dictionary sheets such as page, location, traffic-slot, property dictionary, and user-property sheets do not contain nonessential merged cells.
-10. Extend data validations when populated rows exceed the template's sample validation ranges, especially `数据格式`, `应埋点平台`, and user-property `字段类型`.
-11. Update `change_long`.
-12. Visually or structurally verify that headers remain, required fields are populated, dropdown values are valid, the main sheet does not reference missing properties, template example screenshots are not retained, and populated rows remain readable and filterable.
+5. For each `前端` event, add exactly one first property row in this format: blank `属性英文名称`, `全局自定义属性` in `属性中文名称`, blank data format, and blank value example. Keep the event fields and `上传方式=前端` populated on that row. Put the event's business properties on following rows.
+6. Add every used business event property to `事件级属性列表`, including reused and newly defined properties. Do not add the `全局自定义属性` marker.
+7. Keep `公共_全局自定义事件属性（所有自定义事件都要加该属性）` with the exact seven columns and eight fixed property rows defined above.
+8. Fill the login-user sheet only when user properties are needed; otherwise keep the sheet and its guidance intact.
+9. Do not add, rename, or populate other extra dictionary/page-description sheets by default, including scenario-specific `字典说明`, `流量位说明-首页`, `APP页面说明`, or `APP&Web页面说明`. The fixed global-property sheet is the required exception. Keep concise enum and page/source guidance in the main event sheet's `属性值示例枚举或说明` and `备注信息` columns. Only populate other extra sheets when the user explicitly asks for a dictionary/page mapping sheet, or when the plan has enough reusable page/location/traffic-slot values that a separate dictionary is necessary for implementation.
+10. Remove inherited template images/drawings across all sheets unless explicitly requested; verify the exported workbook has no unintended `xl/media` or `xl/drawings` entries.
+11. Unmerge populated data/dictionary ranges. Verify dictionary sheets such as page, location, traffic-slot, property dictionary, global-property, and user-property sheets do not contain nonessential merged cells.
+12. Extend data validations when populated rows exceed the template's sample validation ranges, especially `数据格式`, `应埋点平台`, and user-property `字段类型`.
+13. Update `change_long`.
+14. Visually or structurally verify that headers remain, required fields are populated, every front-end event has exactly one correctly formatted global-property marker row, the fixed global-property sheet is complete, the main sheet does not reference missing business properties, template example screenshots are not retained, and populated rows remain readable and filterable.
 
 If the user asks only for a Markdown plan or review, do not create an Excel file unless explicitly requested. Still follow these columns when presenting a table meant to be pasted into the template.
