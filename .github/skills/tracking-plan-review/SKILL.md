@@ -19,9 +19,10 @@ Use this skill to design, audit, and output BTCC 埋点方案 according to:
 2. Read `references/field-rules.md` before judging or generating field-level content.
 3. Read `references/output-template.md` when the user asks for a final 提需模板, Excel deliverable, 神策导入表, or a table intended to be pasted into that template.
 4. Separate event/event-property requirements from logged-in user ID/user-property requirements.
-5. Anchor events to real product flow, PRD steps, modules, and user behavior triggers.
-6. Design for downstream BI, funnels, dashboards, user behavior analysis, and governance reuse.
-7. Return structured output in Chinese unless the user asks otherwise.
+5. Apply the fixed global custom event properties in `references/field-rules.md` to every front-end/client-reported custom event.
+6. Anchor events to real product flow, PRD steps, modules, and user behavior triggers.
+7. Design for downstream BI, funnels, dashboards, user behavior analysis, and governance reuse.
+8. Return structured output in Chinese unless the user asks otherwise.
 
 ## Design Mode
 
@@ -31,6 +32,7 @@ When creating a tracking plan:
 - Merge redundant events when the same behavior appears in multiple pages and can be distinguished by event properties.
 - Prefer reusable event properties for common dimensions such as source page, entry, button, position, result, error reason, country, channel, order/trade/deposit context.
 - Choose upload method by accuracy needs: server-side for key result events, front-end for PV/exposure/click/UI interaction events.
+- Every custom event reported by APP, Web, or H5 must carry the fixed global custom event properties applicable to that terminal. In the main event sheet, add one summary property row named `全局自定义属性` for each front-end/client event; keep the eight detailed definitions only in the fixed global-property sheet.
 - Mark platform scope clearly for Android, iOS, Web/JavaScript, mini program, or server-side.
 - Include screenshots or screenshot requirements when UI location, button position, category hierarchy, or version context may be ambiguous.
 - If the user wants an Excel deliverable, choose the matching workbook template and use the columns and sheet rules from `references/output-template.md`.
@@ -42,12 +44,14 @@ When producing a final 神策埋点提需模板:
 - Copy `assets/sensors-custom-event-request-template.xlsx` for a generic/simple plan, or `assets/business-scenario-sensors-tracking-template.xlsx` when the request benefits from a richer scenario template with event rows, reusable property dictionary, traffic-slot/location dictionary, APP page dictionary, or logged-in user profile examples. Use judgment based on the business scenario and downstream analysis needs, not only on the module name.
 - Preserve the selected template's sheets, useful styling, validations, guidance text, and intentional header merges; do not preserve nonessential merged cells in populated data or dictionary areas.
 - Populate the main `（埋点事件+事件级变量）` sheet with one row per event-property binding.
+- For every event whose upload method is `前端`, use its first property-binding row as the global-property marker: leave `属性英文名称` blank, fill `属性中文名称` with `全局自定义属性`, leave data format and value example blank, and keep the event/upload/trigger/platform fields populated. Add the event's normal business-property rows after this marker.
 - Add all used event properties to `事件级属性列表`; avoid duplicating equivalent reusable properties.
+- Always keep the fixed sheet `公共_全局自定义事件属性（所有自定义事件都要加该属性）` and its standard content. Do not rename, omit, clear, or merge it into `事件级属性列表`.
 - Put logged-in user ID and user profile attributes in the login-user sheet, not in the event-property sheet. Some templates name it `登录用户ID&登录用户变量（可不填）`; the business-scenario template names it `登录用户ID&登录用户变量`.
-- Do not add or populate extra dictionary/page-description sheets by default, such as scenario-specific `字典说明`, `APP&Web页面说明`, traffic-slot, location, or page mapping sheets, unless the user explicitly asks for them or the implementation truly requires a separate reusable dictionary. Prefer putting concise enum/value guidance in the main sheet's property examples and remarks.
+- Continue to follow the rule `默认不新增额外字典 Sheet`. The fixed sheet `公共_全局自定义事件属性（所有自定义事件都要加该属性）` is the sole mandatory exception and does not authorize adding any other dictionary sheet. Do not add or populate scenario-specific `字典说明`, `APP&Web页面说明`, traffic-slot, location, or page mapping sheets unless the user explicitly asks for them or the implementation truly requires a separate reusable dictionary. Prefer putting concise enum/value guidance in the main sheet's property examples and remarks.
 - Update `change_long` with the plan version and summary of added/changed/deprecated events or properties.
 - Clean template residue before delivery: remove inherited template screenshots/images/drawings unless the user explicitly asks to keep them; remove nonessential merged cells in populated data/dictionary areas so rows remain filterable; clear or overwrite sample data/styles that make the new content unreadable or ambiguous.
-- Before delivery, verify required fields are filled, dropdown values are valid, the main sheet has no event property missing from `事件级属性列表`, and the workbook has no unintended `xl/media` or `xl/drawings` residue.
+- Before delivery, verify required fields are filled, dropdown values are valid, every front-end/client event has exactly one `全局自定义属性` marker row, the global-property sheet exists with the fixed eight properties, the main sheet has no business event property missing from `事件级属性列表`, and the workbook has no unintended `xl/media` or `xl/drawings` residue.
 
 ## Review Mode
 
@@ -59,10 +63,11 @@ When reviewing a teammate's plan, return:
 - Governance suggestions: event merging, property reuse, value enumeration, naming consistency, screenshots, version tracking, and owner traceability.
 - Revised examples: provide corrected identifiers, names, descriptions, property types, value examples, or trigger wording where helpful.
 - If the reviewed artifact is in the 神策提需模板, also check sheet integrity: main-sheet fields, property dictionary coverage, user-property placement, change log, screenshot placeholders, and platform/dropdown values.
+- Check that every front-end/client custom event carries the applicable fixed global custom event properties and that the Excel workbook contains the complete fixed global-property sheet.
 - Also check for template residue in reviewed Excel files: inherited screenshots/images/drawings, sample rows, unreadable sample styling, and unnecessary merged cells in data or dictionary sheets.
 
 ## Severity
 
-- Critical: causes data not to collect, collect at wrong time, become impossible to analyze, or break unique identifier governance.
+- Critical: causes data not to collect, collect at wrong time, omit required global custom event properties, become impossible to analyze, or break unique identifier governance.
 - Major: causes ambiguous implementation, hard-to-filter data, poor metric reuse, or weak iteration traceability.
 - Minor: affects clarity, naming polish, or implementation convenience without blocking data validity.
